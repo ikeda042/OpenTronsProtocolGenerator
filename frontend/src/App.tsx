@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Container, Stack } from '@mui/material';
+import { Container, Stack, TextField } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 
@@ -26,6 +26,13 @@ function App() {
 
   const handleClick = () => {
     hiddenFileInput.current?.click();
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, key: string) => {
+    setCellValues(prev => ({
+      ...prev,
+      [key]: event.target.value,
+    }));
   };
 
   const downloadTemplate = async () => {
@@ -58,9 +65,18 @@ function App() {
       }
     }
     try {
-      // ここでバックエンドに送信
-      console.log(valuesArray); // デバッグ用
-      // fetch(...) を使用してバックエンドに送信
+      const response = await fetch('https://native.ikeda042api.net/api/dev/submit-values/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ values: valuesArray }),
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      console.log(data);
     } catch (error) {
       console.error('Submit error:', error);
     }
@@ -87,7 +103,6 @@ function App() {
       <Container maxWidth="md" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
         <div style={{ width: '100%', display: 'grid', gridTemplateColumns: 'repeat(13, 1fr)', gap: '1px', backgroundColor: '#ccc', marginBottom: '20px' }}>
           <div style={{ backgroundColor: '#fff', padding: '8px', textAlign: 'center' }}>
-            {/* このセルは空白 */}
           </div>
           {Array.from({ length: 12 }).map((_, colIndex) => (
             <div
@@ -114,20 +129,27 @@ function App() {
               >
                 {rowLabel}
               </div>
-              {Array.from({ length: 12 }).map((_, colIndex) => (
-                <div
-                  key={`${rowLabel}-${colIndex + 1}`}
-                  style={{
-                    backgroundColor: '#fff',
-                    padding: '8px',
-                    textAlign: 'center',
-                    border: '1px solid #ccc'
-                  }}
-                  contentEditable
-                >
-                  {/* セルの内容は編集可能 */}
-                </div>
-              ))}
+              {Array.from({ length: 12 }).map((_, colIndex) => {
+                const key = `${rowLabel}-${colIndex + 1}`;
+                return (
+                  <div
+                    key={key}
+                    style={{
+                      backgroundColor: '#fff',
+                      padding: '8px',
+                      textAlign: 'center',
+                      border: '1px solid #ccc'
+                    }}
+                  >
+                    <TextField
+                      variant="outlined"
+                      size="small"
+                      value={cellValues[key] || ''}
+                      onChange={(e) => handleChange(e, key)}
+                    />
+                  </div>
+                );
+              })}
             </React.Fragment>
           ))}
         </div>
@@ -152,6 +174,7 @@ function App() {
             onClick={handleSubmit}
             color="primary"
             startIcon={<UploadFileIcon />}
+            sx={{ backgroundColor: '#000', color: '#fff' }}
           >
             プレートデータを送信
           </Button>
@@ -162,14 +185,14 @@ function App() {
           >
             プロトコルをダウンロード(python)
           </Button>
-          <Button
+          {/* <Button
             variant="contained"
             onClick={downloadTemplate}
             color='success'
             startIcon={<DownloadIcon />}
           >
             xlsxテンプレートをダウンロード
-          </Button>
+          </Button> */}
         </Stack>
       </Container>
     </div>
