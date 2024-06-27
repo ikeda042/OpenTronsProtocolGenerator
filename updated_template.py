@@ -140,7 +140,7 @@ class OpenTronsProtocol:
             "G12",
             "H12",
         ]
-        self.pick_up_from: list[str] = []
+        self.pick_up_from: list[str] = ['A1', 'B1', 'C1']
 
     def exec(self) -> None:
         tiprack = self.labware_loader.get_tiprack("opentrons_96_tiprack_300ul", "7")

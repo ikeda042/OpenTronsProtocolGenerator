@@ -30,6 +30,22 @@ def index_to_cell(index: int) -> str:
 # print(pick_up_from)
 
 
-for i in range(0, 96):
-    print(index_to_cell(i))
-print([index_to_cell(i) for i in range(0, 96)])
+def update_template_file(
+    pick_up_from: list[str], template_file_path: str, output_file_path: str
+):
+    with open(template_file_path, "r") as file:
+        template_code = file.read()
+
+    pick_up_from_assignment = f"self.pick_up_from: list[str] = {a}"
+    updated_code = template_code.replace(
+        "self.pick_up_from: list[str] = []", pick_up_from_assignment
+    )
+
+    with open(output_file_path, "w") as file:
+        file.write(updated_code)
+
+
+a = ["A1", "B1", "C1"]
+template_file_path = "templates/template.py"
+output_file_path = "updated_template.py"
+update_template_file(a, template_file_path, output_file_path)

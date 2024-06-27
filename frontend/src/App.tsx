@@ -76,9 +76,14 @@ function App() {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      const data = await response.json();
-      console.log(data);
-      setProtocolDownloadable(true);
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.setAttribute('download', 'return_template.py');
+      document.body.appendChild(link);
+      link.click();
+      link?.parentNode?.removeChild(link);
     } catch (error) {
       console.error('Submit error:', error);
     }
