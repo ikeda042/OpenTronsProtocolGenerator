@@ -12,6 +12,7 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 function App() {
   const [file, setFile] = useState<File | null>(null);
   const [downloadable, setDownloadable] = useState(false);
+  const [cellValues, setCellValues] = useState<{ [key: string]: string }>({});
   const hiddenFileInput = useRef<HTMLInputElement>(null);
 
   const rowLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
@@ -46,6 +47,23 @@ function App() {
 
   const downloadFile = () => {
     console.log('Download file');
+  };
+
+  const handleSubmit = async () => {
+    const valuesArray = [];
+    for (let colIndex = 1; colIndex <= 12; colIndex++) {
+      for (const rowLabel of rowLabels) {
+        const key = `${rowLabel}-${colIndex}`;
+        valuesArray.push(cellValues[key] || '');
+      }
+    }
+    try {
+      // ここでバックエンドに送信
+      console.log(valuesArray); // デバッグ用
+      // fetch(...) を使用してバックエンドに送信
+    } catch (error) {
+      console.error('Submit error:', error);
+    }
   };
 
   return (
@@ -121,13 +139,21 @@ function App() {
           ref={hiddenFileInput}
         />
         <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-          <Button
+          {/* <Button
             variant="contained"
             onClick={handleClick}
             sx={{ backgroundColor: '#000', color: '#fff' }}
             startIcon={<UploadFileIcon />}
           >
             xlsxファイルをアップロード
+          </Button> */}
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            color="primary"
+            startIcon={<UploadFileIcon />}
+          >
+            プレートデータを送信
           </Button>
           <Button
             variant="contained"
