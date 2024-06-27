@@ -1,24 +1,145 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useRef } from 'react';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import { Container, Stack } from '@mui/material';
 
 function App() {
+  const [file, setFile] = useState<File | null>(null);
+  const [downloadable, setDownloadable] = useState(false);
+  const hiddenFileInput = useRef<HTMLInputElement>(null);
+
+  const rowLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setFile(event.target.files[0]);
+      setDownloadable(true);
+    }
+  };
+
+  const handleClick = () => {
+    hiddenFileInput.current?.click();
+  };
+
+  const downloadTemplate = async () => {
+    try {
+      const response = await fetch('https://native.ikeda042api.net/api/dev/xlsx_template');
+      if (!response.ok) throw new Error('Response not OK');
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.setAttribute('download', 'template.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      link?.parentNode?.removeChild(link);
+    } catch (error) {
+      console.error('Download template error:', error);
+    }
+  };
+
+  const downloadFile = () => {
+    console.log('Download file');
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <AppBar position="static" sx={{ backgroundColor: '#000' }}>
+        <Toolbar>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h5" component="div">
+            OpenTrons Protocol Generator
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Container maxWidth="md" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(13, 1fr)', gap: '1px', backgroundColor: '#ccc', marginBottom: '20px' }}>
+          <div style={{ backgroundColor: '#fff', padding: '8px', textAlign: 'center' }}>
+            {/* このセルは空白 */}
+          </div>
+          {Array.from({ length: 12 }).map((_, colIndex) => (
+            <div
+              key={`colLabel-${colIndex + 1}`}
+              style={{
+                backgroundColor: '#fff',
+                padding: '8px',
+                textAlign: 'center',
+                border: '1px solid #ccc'
+              }}
+            >
+              {colIndex + 1}
+            </div>
+          ))}
+          {rowLabels.map((rowLabel, rowIndex) => (
+            <React.Fragment key={`row-${rowLabel}`}>
+              <div
+                style={{
+                  backgroundColor: '#fff',
+                  padding: '8px',
+                  textAlign: 'center',
+                  border: '1px solid #ccc'
+                }}
+              >
+                {rowLabel}
+              </div>
+              {Array.from({ length: 12 }).map((_, colIndex) => (
+                <div
+                  key={`${rowLabel}-${colIndex + 1}`}
+                  style={{
+                    backgroundColor: '#fff',
+                    padding: '8px',
+                    textAlign: 'center',
+                    border: '1px solid #ccc'
+                  }}
+                  contentEditable
+                >
+                  {/* セルの内容は編集可能 */}
+                </div>
+              ))}
+            </React.Fragment>
+          ))}
+        </div>
+        <input
+          accept=".xlsx"
+          type="file"
+          onChange={handleFileChange}
+          style={{ display: 'none' }}
+          ref={hiddenFileInput}
+        />
+        <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+          <Button
+            variant="contained"
+            onClick={handleClick}
+          >
+            アップロード
+          </Button>
+          <Button
+            variant="contained"
+            disabled={!downloadable}
+            onClick={downloadFile}
+          >
+            ダウンロード
+          </Button>
+          <Button
+            variant="contained"
+            onClick={downloadTemplate}
+          >
+            テンプレート
+          </Button>
+        </Stack>
+      </Container>
     </div>
   );
 }
