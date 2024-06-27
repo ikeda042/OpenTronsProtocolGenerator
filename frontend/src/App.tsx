@@ -13,6 +13,7 @@ function App() {
   const [file, setFile] = useState<File | null>(null);
   const [downloadable, setDownloadable] = useState(false);
   const [cellValues, setCellValues] = useState<{ [key: string]: string }>({});
+  const [protocolDownloadable, setProtocolDownloadable] = useState(false); // 新しい状態変数を追加
   const hiddenFileInput = useRef<HTMLInputElement>(null);
 
   const rowLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
@@ -77,10 +78,12 @@ function App() {
       }
       const data = await response.json();
       console.log(data);
+      setProtocolDownloadable(true);
     } catch (error) {
       console.error('Submit error:', error);
     }
   };
+
 
   return (
     <div>
@@ -173,7 +176,6 @@ function App() {
           <Button
             variant="contained"
             onClick={handleSubmit}
-            color="primary"
             startIcon={<UploadFileIcon />}
             sx={{ backgroundColor: '#000', color: '#fff' }}
           >
@@ -181,8 +183,10 @@ function App() {
           </Button>
           <Button
             variant="contained"
-            disabled={!downloadable}
+            disabled={!protocolDownloadable} // ダウンロードボタンの有効/無効状態を更新
             onClick={downloadFile}
+            startIcon={<DownloadIcon />}
+            sx={{ backgroundColor: '#000', color: '#fff' }}
           >
             プロトコルをダウンロード(python)
           </Button>
