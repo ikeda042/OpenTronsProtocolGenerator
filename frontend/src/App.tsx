@@ -146,6 +146,7 @@ function App() {
                       size="small"
                       value={cellValues[key] || ''}
                       onChange={(e) => handleChange(e, key)}
+                      autoComplete="off"
                     />
                   </div>
                 );
