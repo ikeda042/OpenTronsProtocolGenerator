@@ -1,8 +1,9 @@
-import pandas as pd
-import numpy as np
+from openpyxl import load_workbook
 
-df = pd.read_excel("template.xlsx")
+workbook = load_workbook(filename="template.xlsx")
+worksheet = workbook.active
 
-# iterate over the rows of the dataframe
-for index, row in df.iterrows():
-    print(row["Column1"], row["Column2"])
+
+header, *rows = [row for row in worksheet.iter_rows(values_only=True)]
+
+cols: dict[str, str] = {}
