@@ -15,16 +15,21 @@ def index_to_cell(index: int) -> str:
     return chars[index % 8] + str(index // 8 + 1)
 
 
-workbook: Workbook = load_workbook(filename="template.xlsx")
-worksheet = workbook.active
+# workbook: Workbook = load_workbook(filename="template.xlsx")
+# worksheet = workbook.active
 
-header, *rows = [row for row in worksheet.iter_rows(values_only=True)]
+# header, *rows = [row for row in worksheet.iter_rows(values_only=True)]
 
-data: list[list[str | None]] = [[j for j in i[1:]] for i in rows]
-data: list[str | None] = [item for sublist in data for item in sublist]
+# data: list[list[str | None]] = [[j for j in i[1:]] for i in rows]
+# data: list[str | None] = [item for sublist in data for item in sublist]
 
-pick_up_from: list[str] = [
-    index_to_cell(i) for i in range(len(data)) if data[i] is not None
-]
+# pick_up_from: list[str] = [
+#     index_to_cell(i) for i in range(len(data)) if data[i] is not None
+# ]
 
-print(pick_up_from)
+# print(pick_up_from)
+
+
+for i in range(0, 96):
+    print(index_to_cell(i))
+print([index_to_cell(i) for i in range(0, 96)])
