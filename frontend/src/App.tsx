@@ -15,6 +15,8 @@ function App() {
   const [cellValues, setCellValues] = useState<{ [key: string]: string }>({});
   const [protocolDownloadable, setProtocolDownloadable] = useState(false);
   const hiddenFileInput = useRef<HTMLInputElement>(null);
+  const [protocolReady, setProtocolReady] = useState(false);
+
 
   const rowLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
@@ -53,10 +55,22 @@ function App() {
     }
   };
 
-  const downloadFile = () => {
-    console.log('Download file');
+  const downloadFile = async () => {
+    try {
+      const response = await fetch('https://native.ikeda042api.net/api/dev/return-template/');
+      if (!response.ok) throw new Error('Response not OK');
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.setAttribute('download', 'return_template.py');
+      document.body.appendChild(link);
+      link.click();
+      link?.parentNode?.removeChild(link);
+    } catch (error) {
+      console.error('Download error:', error);
+    }
   };
-
   const handleSubmit = async () => {
     const valuesArray = [];
     for (let colIndex = 1; colIndex <= 12; colIndex++) {
@@ -76,14 +90,7 @@ function App() {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      const blob = await response.blob();
-      const downloadUrl = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = downloadUrl;
-      link.setAttribute('download', 'return_template.py');
-      document.body.appendChild(link);
-      link.click();
-      link?.parentNode?.removeChild(link);
+      setProtocolReady(true);
     } catch (error) {
       console.error('Submit error:', error);
     }
@@ -188,7 +195,7 @@ function App() {
           </Button>
           <Button
             variant="contained"
-            disabled={!protocolDownloadable}
+            disabled={!protocolReady}
             onClick={downloadFile}
             startIcon={<DownloadIcon />}
             sx={{ backgroundColor: '#000', color: '#fff' }}
