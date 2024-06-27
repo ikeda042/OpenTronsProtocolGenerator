@@ -13,7 +13,7 @@ function App() {
   const [file, setFile] = useState<File | null>(null);
   const [downloadable, setDownloadable] = useState(false);
   const [cellValues, setCellValues] = useState<{ [key: string]: string }>({});
-  const [protocolDownloadable, setProtocolDownloadable] = useState(false); // 新しい状態変数を追加
+  const [protocolDownloadable, setProtocolDownloadable] = useState(false);
   const hiddenFileInput = useRef<HTMLInputElement>(null);
 
   const rowLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
@@ -183,7 +183,7 @@ function App() {
           </Button>
           <Button
             variant="contained"
-            disabled={!protocolDownloadable} // ダウンロードボタンの有効/無効状態を更新
+            disabled={!protocolDownloadable}
             onClick={downloadFile}
             startIcon={<DownloadIcon />}
             sx={{ backgroundColor: '#000', color: '#fff' }}
