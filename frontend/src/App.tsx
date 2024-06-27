@@ -6,6 +6,8 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Container, Stack } from '@mui/material';
+import DownloadIcon from '@mui/icons-material/Download';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 
 function App() {
   const [file, setFile] = useState<File | null>(null);
@@ -65,7 +67,7 @@ function App() {
         </Toolbar>
       </AppBar>
       <Container maxWidth="md" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(13, 1fr)', gap: '1px', backgroundColor: '#ccc', marginBottom: '20px' }}>
+        <div style={{ width: '100%', display: 'grid', gridTemplateColumns: 'repeat(13, 1fr)', gap: '1px', backgroundColor: '#ccc', marginBottom: '20px' }}>
           <div style={{ backgroundColor: '#fff', padding: '8px', textAlign: 'center' }}>
             {/* このセルは空白 */}
           </div>
@@ -122,21 +124,25 @@ function App() {
           <Button
             variant="contained"
             onClick={handleClick}
+            sx={{ backgroundColor: '#000', color: '#fff' }}
+            startIcon={<UploadFileIcon />}
           >
-            アップロード
+            xlsxファイルをアップロード
           </Button>
           <Button
             variant="contained"
             disabled={!downloadable}
             onClick={downloadFile}
           >
-            ダウンロード
+            プロトコルをダウンロード(python)
           </Button>
           <Button
             variant="contained"
             onClick={downloadTemplate}
+            color='success'
+            startIcon={<DownloadIcon />}
           >
-            テンプレート
+            xlsxテンプレートをダウンロード
           </Button>
         </Stack>
       </Container>
