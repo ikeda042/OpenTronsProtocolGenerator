@@ -2,7 +2,10 @@ import aiofiles
 from fastapi import APIRouter
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
+import uvicorn
+from fastapi import FastAPI
 
+app = FastAPI()
 router_dev = APIRouter()
 
 
@@ -59,3 +62,9 @@ async def submit_values(values: Values):
 @router_dev.get("/return-template/")
 async def return_template():
     return FileResponse("dev/return_template.py")
+
+
+app.include_router(router_dev)
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
