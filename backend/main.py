@@ -54,7 +54,7 @@ async def submit_values(values: Values):
         if i[1] != "":
             valid_values.append(index_to_cell(i[0]))
     await update_template_file(
-        valid_values, "dev/template.py", "dev/return_template.py"
+        valid_values, "backend/template.py", "backend/return_template.py"
     )
     return {"values": valid_values}
 
