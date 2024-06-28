@@ -9,6 +9,7 @@ import { Container, Stack, TextField } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 
+const API_PREFIX = 'http://localhost:8000';
 function App() {
   const [file, setFile] = useState<File | null>(null);
   const [downloadable, setDownloadable] = useState(false);
@@ -40,7 +41,7 @@ function App() {
 
   const downloadTemplate = async () => {
     try {
-      const response = await fetch('http://localhost:8000/xlsx_template');
+      const response = await fetch(`${API_PREFIX}/xlsx_template/`);
       if (!response.ok) throw new Error('Response not OK');
       const blob = await response.blob();
       const downloadUrl = window.URL.createObjectURL(blob);
@@ -57,7 +58,7 @@ function App() {
 
   const downloadFile = async () => {
     try {
-      const response = await fetch('http://localhost:8000/return-template/');
+      const response = await fetch(`${API_PREFIX}/return-template/`);
       if (!response.ok) throw new Error('Response not OK');
       const blob = await response.blob();
       const downloadUrl = window.URL.createObjectURL(blob);
@@ -80,7 +81,7 @@ function App() {
       }
     }
     try {
-      const response = await fetch('http://localhost:8000/submit-values/', {
+      const response = await fetch(`${API_PREFIX}/submit-values/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -99,7 +100,7 @@ function App() {
 
   const downloadCSV = async () => {
     try {
-      const response = await fetch('http://localhost:8000/return-csv/');
+      const response = await fetch(`${API_PREFIX}/return-csv/`);
       if (!response.ok) throw new Error('Response not OK');
       const blob = await response.blob();
       const downloadUrl = window.URL.createObjectURL(blob);
@@ -138,7 +139,7 @@ function App() {
           </div>
           {Array.from({ length: 12 }).map((_, colIndex) => (
             <div
-              key={`colLabel-${colIndex + 1}`}
+              key={`colLabel - ${colIndex + 1}`}
               style={{
                 backgroundColor: '#fff',
                 padding: '8px',
@@ -150,7 +151,7 @@ function App() {
             </div>
           ))}
           {rowLabels.map((rowLabel, rowIndex) => (
-            <React.Fragment key={`row-${rowLabel}`}>
+            <React.Fragment key={`row - ${rowLabel} `}>
               <div
                 style={{
                   backgroundColor: '#fff',
@@ -162,7 +163,7 @@ function App() {
                 {rowLabel}
               </div>
               {Array.from({ length: 12 }).map((_, colIndex) => {
-                const key = `${rowLabel}-${colIndex + 1}`;
+                const key = `${rowLabel} -${colIndex + 1} `;
                 return (
                   <div
                     key={key}
