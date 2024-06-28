@@ -1,6 +1,17 @@
 # OpenTronsProtocolGenerator
 
-# バックエンドの起動
+## OT-2 Labwareの配置
+
+以下のようにチップラック、プレート(from),プレート(to)を配置する。
+
+![images/OT2_Labware.jpg](images/OT2_Labware.jpg)
+
+
+## 入力画面
+
+
+
+## バックエンドの起動
 
 バックエンドディレクトリに移動する。
 
@@ -26,7 +37,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-# フロントエンドの起動
+## フロントエンドの起動
 
 フロントエンドディレクトリに移動。
 
