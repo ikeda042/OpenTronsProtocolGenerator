@@ -9,7 +9,7 @@ import { Container, Stack, TextField } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 
-const API_PREFIX = 'http://localhost:8000';
+const API_PREFIX = 'https://native.ikeda042api.net/api/dev/';
 function App() {
   const [file, setFile] = useState<File | null>(null);
   const [downloadable, setDownloadable] = useState(false);
@@ -225,7 +225,7 @@ function App() {
             disabled={!protocolReady} // データが提出された後にenabledになる
             onClick={downloadCSV} // ステップ4で定義する関数
             startIcon={<DownloadIcon />}
-            sx={{ backgroundColor: '#000', color: '#fff' }}
+            color="success"
           >
             CSVをダウンロード
           </Button>
