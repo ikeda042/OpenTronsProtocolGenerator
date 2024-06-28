@@ -64,15 +64,36 @@ async def update_template_file(
         await file.write(updated_code)
 
 
+async def create_csv(tags: list[str]) -> None:
+    rows, cols = 8, 12
+    csv_string = ""
+
+    for i in range(rows):
+        row = []
+        for j in range(cols):
+            index = i * cols + j
+            if index < len(tags):
+                row.append(tags[index])
+            else:
+                row.append("")
+        csv_string += ",".join(row) + "\n"
+
+    async with aiofiles.open("backend/result.csv", "w") as file:
+        await file.write(csv_string)
+
+
 @router_dev.post("/submit-values/")
 async def submit_values(values: Values):
     valid_values = []
+    valid_tags = []
     for i in enumerate(values.values):
         if i[1] != "":
             valid_values.append(index_to_cell(i[0]))
+            valid_tags.append(i[1])
     await update_template_file(
         valid_values, "backend/template.py", "backend/return_template.py"
     )
+    await create_csv(valid_tags)
     return {"values": valid_values}
 
 
