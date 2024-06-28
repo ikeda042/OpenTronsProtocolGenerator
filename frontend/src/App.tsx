@@ -97,6 +97,23 @@ function App() {
   };
 
 
+  const downloadCSV = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/return-csv/');
+      if (!response.ok) throw new Error('Response not OK');
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.setAttribute('download', 'data.csv');
+      document.body.appendChild(link);
+      link.click();
+      link?.parentNode?.removeChild(link);
+    } catch (error) {
+      console.error('Download CSV error:', error);
+    }
+  };
+
   return (
     <div>
       <AppBar position="static" sx={{ backgroundColor: '#000' }}>
@@ -201,6 +218,15 @@ function App() {
             sx={{ backgroundColor: '#000', color: '#fff' }}
           >
             プロトコルをダウンロード(python)
+          </Button>
+          <Button
+            variant="contained"
+            disabled={!protocolReady} // データが提出された後にenabledになる
+            onClick={downloadCSV} // ステップ4で定義する関数
+            startIcon={<DownloadIcon />}
+            sx={{ backgroundColor: '#000', color: '#fff' }}
+          >
+            CSVをダウンロード
           </Button>
           {/* <Button
             variant="contained"
