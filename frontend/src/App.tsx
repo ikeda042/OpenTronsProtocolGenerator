@@ -9,7 +9,7 @@ import { Container, Stack, TextField } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 
-const API_PREFIX = 'https://native.ikeda042api.net/api/dev';
+const API_PREFIX = 'http://localhost:8000';
 function App() {
   const [file, setFile] = useState<File | null>(null);
   const [downloadable, setDownloadable] = useState(false);
@@ -76,12 +76,12 @@ function App() {
     const valuesArray = [];
     for (let colIndex = 1; colIndex <= 12; colIndex++) {
       for (const rowLabel of rowLabels) {
-        const key = `${rowLabel}-${colIndex + 1}`;
-        valuesArray.push(cellValues[key] || '');
+        const key = `${rowLabel}-${colIndex}`.trim();
+        valuesArray.push(cellValues[key] ?? '');
       }
     }
 
-    console.log('Submitting values:', valuesArray);
+
 
     try {
       const response = await fetch(`${API_PREFIX}/submit-values/`, {
@@ -168,7 +168,7 @@ function App() {
                 {rowLabel}
               </div>
               {Array.from({ length: 12 }).map((_, colIndex) => {
-                const key = `${rowLabel} -${colIndex + 1} `;
+                const key = `${rowLabel}-${colIndex + 1}`;
                 return (
                   <div
                     key={key}
