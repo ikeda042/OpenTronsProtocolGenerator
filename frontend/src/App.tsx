@@ -40,7 +40,7 @@ function App() {
 
   const downloadTemplate = async () => {
     try {
-      const response = await fetch('https://native.ikeda042api.net/api/dev/xlsx_template');
+      const response = await fetch('http://localhost:8000/xlsx_template');
       if (!response.ok) throw new Error('Response not OK');
       const blob = await response.blob();
       const downloadUrl = window.URL.createObjectURL(blob);
@@ -57,7 +57,7 @@ function App() {
 
   const downloadFile = async () => {
     try {
-      const response = await fetch('https://native.ikeda042api.net/api/dev/return-template/');
+      const response = await fetch('http://localhost:8000/return-template/');
       if (!response.ok) throw new Error('Response not OK');
       const blob = await response.blob();
       const downloadUrl = window.URL.createObjectURL(blob);
@@ -80,7 +80,7 @@ function App() {
       }
     }
     try {
-      const response = await fetch('https://native.ikeda042api.net/api/dev/submit-values/', {
+      const response = await fetch('http://localhost:8000/submit-values/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
