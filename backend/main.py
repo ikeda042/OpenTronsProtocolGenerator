@@ -65,7 +65,7 @@ async def update_template_file(
 
 
 async def create_csv(tags: list[str]) -> None:
-    rows, cols = 8, 12
+    rows, cols = 12, 8
     csv_string = ""
 
     for i in range(rows):
@@ -77,9 +77,16 @@ async def create_csv(tags: list[str]) -> None:
             else:
                 row.append("")
         csv_string += ",".join(row) + "\n"
+    trimmed_csv_string = csv_string.rstrip("\n")
 
+    transpose_csv_string = "\n".join(
+        [
+            ",".join([row.split(",")[i] for row in trimmed_csv_string.split("\n")])
+            for i in range(cols)
+        ]
+    )
     async with aiofiles.open("backend/result.csv", "w") as file:
-        await file.write(csv_string)
+        await file.write(transpose_csv_string)
 
 
 @router_dev.post("/submit-values/")
@@ -100,6 +107,11 @@ async def submit_values(values: Values):
 @router_dev.get("/return-template/")
 async def return_template():
     return FileResponse("backend/return_template.py")
+
+
+@router_dev.get("/return-csv/")
+async def return_csv():
+    return FileResponse("backend/result.csv")
 
 
 app.include_router(router_dev)
