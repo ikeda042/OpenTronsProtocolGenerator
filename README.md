@@ -27,4 +27,31 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+# フロントエンドの起動
+
+フロントエンドディレクトリに移動。
+
+```bash
+cd frontend
+```
+
+パッケージのインストール
+
+```bash
+npm install
+```
+
+アプリケーションの起動
+
+```bash
+npm start
+```
+
+下記URLでトップページにつながる。
+
+[http://localhost:3000/](http://localhost:3000/)
+
+
+
+
 
