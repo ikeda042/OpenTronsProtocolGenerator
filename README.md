@@ -1,5 +1,4 @@
 # OpenTronsProtocolGenerator
-OpenTrons OT-2 protocol generator
 
 # バックエンドの起動
 
