@@ -9,7 +9,7 @@ import { Container, Stack, TextField } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 
-const API_PREFIX = 'http://localhost:8000';
+const API_PREFIX = 'http://native.ikeda042api.new/api/dev';
 function App() {
   const [file, setFile] = useState<File | null>(null);
   const [downloadable, setDownloadable] = useState(false);
