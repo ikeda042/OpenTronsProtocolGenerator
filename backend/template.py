@@ -16,7 +16,7 @@ class LabwareLoader:
     def get_tiprack(
         self,
         tiprack_type: Literal[
-            "opentrons_96_tiprack_300ul", "opentrons_96_tiprack_20ul"
+            "opentrons_96_tiprack_300ul", "opentrons_96_tiprack_20ul", ""
         ],
         slot: Literal["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
     ) -> protocol_api.labware.Labware:
@@ -31,7 +31,7 @@ class LabwareLoader:
 
     def load_pipette(
         self,
-        pipette_type: Literal["p300_multi_gen2", "p20_multi_gen2"],
+        pipette_type: Literal["p300_multi_gen2", "p20_multi_gen2", "p20_single_gen2"],
         tiprack: protocol_api.labware.Labware,
         mount: Literal["left", "right"],
     ) -> protocol_api.InstrumentContext:
@@ -144,29 +144,38 @@ class OpenTronsProtocol:
 
     def exec(self) -> None:
         tiprack = self.labware_loader.get_tiprack("opentrons_96_tiprack_300ul", "7")
+        tiprack2 = self.labware_loader.get_tiprack("opentrons_96_tiprack_20ul", "8")
         right_pipette = self.labware_loader.load_pipette(
             "p300_multi_gen2", tiprack, "right"
         )
-        microplate = self.labware_loader.load_plate(
+        left_pipette = self.labware_loader.load_pipette(
+            "p20_single_gen2", tiprack2, "left"
+        )
+        microplate_from = self.labware_loader.load_plate(
+            "corning_96_wellplate_360ul_flat", "5"
+        )
+        microplate_to = self.labware_loader.load_plate(
             "corning_96_wellplate_360ul_flat", "2"
         )
         self.perform_pipetting_cycle(
-            right_pipette,
-            tiprack,
-            microplate,
+            left_pipette,
+            tiprack2,
+            microplate_from,
+            microplate_to,
         )
 
     def perform_pipetting_cycle(
         self,
         pipette: protocol_api.InstrumentContext,
         tiprack: protocol_api.labware.Labware,
-        plate: protocol_api.labware.Labware,
+        plate_from: protocol_api.labware.Labware,
+        plate_to: protocol_api.labware.Labware,
     ) -> None:
 
-        for fr, to in zip(self.wells, self.wells):
+        for fr, to in zip(self.pick_up_from, self.wells):
             pipette.pick_up_tip(tiprack.wells_by_name()[to])
-            pipette.aspirate(150, plate.wells_by_name()[fr])
-            pipette.dispense(150, plate.wells_by_name()[to])
+            pipette.aspirate(15, plate_from.wells_by_name()[fr])
+            pipette.dispense(15, plate_to.wells_by_name()[to])
             pipette.blow_out()
             pipette.drop_tip()
 
