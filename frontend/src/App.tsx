@@ -76,10 +76,13 @@ function App() {
     const valuesArray = [];
     for (let colIndex = 1; colIndex <= 12; colIndex++) {
       for (const rowLabel of rowLabels) {
-        const key = `${rowLabel}-${colIndex}`;
+        const key = `${rowLabel}-${colIndex + 1}`;
         valuesArray.push(cellValues[key] || '');
       }
     }
+
+    console.log('Submitting values:', valuesArray);
+
     try {
       const response = await fetch(`${API_PREFIX}/submit-values/`, {
         method: 'POST',
@@ -88,14 +91,16 @@ function App() {
         },
         body: JSON.stringify({ values: valuesArray }),
       });
+
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error(`Network response was not ok: ${response.status}`);
       }
       setProtocolReady(true);
     } catch (error) {
       console.error('Submit error:', error);
     }
   };
+
 
 
   const downloadCSV = async () => {
